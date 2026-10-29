@@ -1,0 +1,25 @@
+{
+  "name": "livebridge",
+  "private": true,
+  "version": "1.0.0",
+  "description": "LiveBridge — AI-powered real-time language interpreter (voice, chat, live captions, peer connect)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "signaling": "node server/signaling-server.js",
+    "search-api": "node server/search-api.js",
+    "servers": "node server/index.js"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.3.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^5.4.11"
+  }
+}
