@@ -14,9 +14,17 @@ privacy badge, security banner, and a 30-minute inactivity lock.
 
 ---
 
+## First useful test
+
+Start with **Chat Translator** and a harmless sample such as “Where is the bus stop?” before granting microphone or screen-sharing access. Translation requires internet access and may send text to Google Translate or MyMemory. Browser speech recognition may also use a vendor service. **Local Ollama extras do not make the whole application offline or private.**
+
+The privacy scanner is a fallible heuristic, not a guarantee that secrets or personal information cannot leave your device. Do not use real medical, legal, financial or confidential conversations for an initial evaluation. Connect mode needs two peers that can reach the signaling service; localhost URLs are for same-machine development, not a hosted deployment.
+
+This repository currently has no root license file. Public source visibility is not a grant of open-source redistribution rights; licensing must be resolved by the owner before presenting it as a reusable open-source library.
+
 ## 1. Prerequisites
 
-- **Node.js 18+** (this project is tested on Node 20) — https://nodejs.org
+- **Node.js 22 LTS** recommended (the original project notes name Node 20; newer runtime compatibility must be checked with the build) — https://nodejs.org
 - **Chrome or Edge (desktop)** — required for Speech Recognition and system-audio capture.
   Firefox/Safari work for chat & translation only.
 - **(Optional) Ollama** — for the local-AI extras (conversation insights, AI emotion,
@@ -25,8 +33,11 @@ privacy badge, security banner, and a 30-minute inactivity lock.
 ## 2. Quick start (VS Code)
 
 ```bash
-# 1. install dependencies
-npm install
+# 1. fetch the project and install the locked dependency tree
+git clone https://github.com/RANJITHROSAN17/LiveBridge.git
+cd LiveBridge
+npm ci
+# Optional: copy .env.example to .env to customize the signaling URL
 
 # 2. start the local backends (signaling + search API) — keep this terminal open
 npm run servers
@@ -103,34 +114,9 @@ livebridge/
     └── services/               # 14 logic services (your files)
 ```
 
-## 6. What was added vs. what was yours
+## 6. Development checks
 
-**Everything under `src/components/` and `src/services/` is your copied code**
-(renamed from `.txt` to `.jsx`/`.js`, line endings normalized only).
-
-Missing files that were reconstructed to make the project run:
-
-- `src/App.jsx` — the shell (missing): language list, mode tabs, overlays,
-  session monitor, Ollama status chip
-- `src/main.jsx`, `index.html`, `vite.config.js`, `package.json` — Vite bootstrap
-- `src/styles.css` — global stylesheet (your components reference ~90 shared
-  classNames, `--font-mono`, `--border`, and the `fadeInUp` keyframe that had no
-  definition anywhere)
-- `server/signaling-server.js` — Connect mode needed a WebSocket signaling server
-  on port 3001 (protocol matched to `signalingService.js` exactly)
-- `server/search-api.js` — the Voice Assistant calls `GET /search?q=…` on port
-  5000; this provides it (local knowledge base + optional Ollama answers)
-- `.env`, `.env.example`, `.gitignore`, this README
-
-**Two small fixes inside your copied files** (marked `✅ FIXED` in code comments):
-
-1. `src/services/aiService.js` — `PREFERRED_MODELS` only listed
-   `qwen2.5-coder:7b` although the file header promises "smallest model first
-   (qwen2.5:1.5b)… no more qwen2.5-coder:7b (4.5GB = too slow)". Restored the
-   smallest-first list and made `checkOllamaStatus` prefer exact matches.
-2. `src/components/ChatMode.jsx` — `dataGuardService` existed but nothing
-   imported it. The send path now runs `scanBeforeSending()` (blocks passwords /
-   keys / personal IDs, asks before sending confidential wording).
+Run `npm run build` to check the production bundle. With the signaling service running, run `node server/test-signaling.mjs` for the protocol self-test. These checks do not establish translation accuracy, browser compatibility, security or deployment readiness. A locked-install audit on 1 November 2026 reported **3 dependency vulnerabilities (1 moderate, 2 high)**, including Vite/esbuild tooling; these are not fixed by the onboarding documentation change. Do not expose the development server publicly. Review `npm audit` and test a supported dependency upgrade before deployment.
 
 ## 7. Feature → dependency map (troubleshooting)
 
@@ -153,3 +139,7 @@ Missing files that were reconstructed to make the project run:
 - The session monitor pauses the app after 30 minutes of inactivity
   (`securityService.startSessionMonitor`); click **Resume Session** to continue.
 - Connect-mode rooms are 1:1 and use a 6-character code (A–H J–N P–Z 2–9).
+
+## Maintainer
+
+**[Ranjith Rosan](https://github.com/RANJITHROSAN17)** maintains LiveBridge, the browser interpretation prototype in this repository. Third-party services and libraries retain their own terms and credits; maintainer attribution does not replace a project license.
