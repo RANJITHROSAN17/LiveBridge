@@ -139,3 +139,7 @@ Run `npm run build` to check the production bundle. With the signaling service r
 - The session monitor pauses the app after 30 minutes of inactivity
   (`securityService.startSessionMonitor`); click **Resume Session** to continue.
 - Connect-mode rooms are 1:1 and use a 6-character code (A–H J–N P–Z 2–9).
+
+## Maintainer
+
+**[Ranjith Rosan](https://github.com/RANJITHROSAN17)** maintains LiveBridge, the browser interpretation prototype in this repository. Third-party services and libraries retain their own terms and credits; maintainer attribution does not replace a project license.
